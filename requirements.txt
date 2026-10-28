@@ -1,0 +1,9 @@
+# Leitura do shapefile do IBGE, usado só pela extensão das inversões.
+# Módulo único em Python puro: não depende de GDAL nem de compilador.
+pyshp==3.1.6
+
+# Interface do aplicativo.
+streamlit==1.37.0
+
+# O algoritmo principal não usa biblioteca nenhuma: o dividir e conquistar,
+# a força bruta e a geometria são implementados no projeto.

@@ -45,8 +45,18 @@ Conferência — `python -m src.dados` deve imprimir:
 usa vírgula, no arquivo nacional inteiro. Sem trocar a vírgula por ponto, todo
 `float()` de longitude estoura. Tem teste próprio.
 
-**A base só traz códigos.** `UF` e `IBGE` são códigos numéricos, não nomes. Para
-escrever o nome do estado ou do município é preciso cruzar com a tabela do IBGE.
+**A base só traz códigos.** `UF` e `IBGE` são códigos numéricos, não nomes.
+
+Os **27 códigos de unidade da federação** estão em `src/dados.py`, e não vieram
+de memória: conferimos cada um contra as coordenadas da própria base. Roraima e
+Amapá são os dois únicos com latitude média positiva, o Acre é o mais a oeste, o
+Rio Grande do Sul o mais ao sul, e o Distrito Federal tem exatamente 200
+estabelecimentos — o mesmo número do nosso trabalho anterior. Tem teste próprio.
+
+Os **nomes de município** não cabem no código: são 5.570. Se o arquivo
+`data/municipios_ibge.csv` existir, com as colunas `codigo;nome` separadas por
+ponto e vírgula, os nomes aparecem nas saídas; sem ele, sai o código. A tabela
+está em <https://servicodados.ibge.gov.br/api/v1/localidades/municipios>.
 
 ## A geometria
 
@@ -74,7 +84,69 @@ esfera.
 
 ## O algoritmo
 
-*(seção a ser detalhada)*
+A força bruta compara todos os pares: com 46.059 pontos são **1.060.692.711**
+comparações. O dividir e conquistar resolve o mesmo problema em três passos.
+
+**1. Dividir.** Ordena os pontos pela coordenada horizontal e corta no meio, com
+uma linha vertical deixando metade dos pontos de cada lado.
+
+**2. Conquistar.** Resolve cada metade recursivamente e guarda a menor das duas
+distâncias encontradas. Chame ela de **d**.
+
+**3. Combinar.** O par mais próximo ainda pode ter um ponto de cada lado — mas
+só se os dois estiverem a menos de **d** da linha de corte. Basta olhar uma
+faixa de largura `2d` em volta dela.
+
+### Por que a faixa não custa caro
+
+O passo 3 parece ser onde o algoritmo se perde: a faixa pode conter todos os
+pontos. O que salva é a ordem.
+
+Percorrendo a faixa **ordenada pela coordenada vertical**, cada ponto só precisa
+ser comparado com os seguintes enquanto a diferença vertical for menor que
+**d** — passou disso, nenhum ponto adiante pode formar par melhor, e a varredura
+para.
+
+E esse pedaço é curto. Considere o retângulo de `2d` por `d` à frente de um
+ponto da faixa: como as duas metades já foram resolvidas, **não há dois pontos
+do mesmo lado a menos de d um do outro**. Dividindo o retângulo em quadrados de
+lado `d/2`, cada quadrado cabe no máximo um ponto, e são oito quadrados. Logo, no
+máximo **sete vizinhos** a examinar por ponto. Sete é constante, a combinação
+fica linear, e o total é **O(n log n)**.
+
+### O limiar derruba esse argumento
+
+Quando se pede o par mais próximo **acima de um limiar**, o `minimo_km`, aquele
+raciocínio deixa de valer. Ele depende de não existirem dois pontos a menos de
+**d** do mesmo lado — e é exatamente isso que o limiar permite: pares colados
+são descartados da resposta, mas os pontos continuam lá, ocupando a faixa e
+empurrando os vizinhos de verdade para fora da janela de sete.
+
+Alargar a janela não conserta, porque o número de pontos que cabem no retângulo
+deixa de ter limite fixo: depende de quão coladas as duplicatas estão. A solução
+correta é **não ter janela**: a varredura para apenas pela diferença vertical,
+que é o que de fato garante a corretude. Com dados sem duplicatas o efeito é o
+mesmo, porque a parada acontece no sétimo vizinho de qualquer jeito.
+
+O custo disso é que, numa base com muitos pontos empilhados, a faixa pode ficar
+cara. Na base do CNES isso não acontece — as 46 mil comparações levam menos de
+um segundo —, mas é uma limitação real e fica registrada aqui.
+
+### Onde isso está
+
+`src/par_proximo.py`. A função pública é
+
+```
+par_mais_proximo(pontos, minimo_km=0.0) -> (distancia_km, (i, j))
+```
+
+Ela recebe latitudes e longitudes, projeta, roda a recursão no plano e devolve
+os índices do par junto com a distância **de haversine** entre eles — a
+distância de verdade sobre a esfera, não a do plano.
+
+O caso base da recursão é a própria força bruta, para três pontos ou menos. É a
+mesma ideia que `src/forca_bruta.py` aplica à base inteira, e é o que permite
+afirmar que os dois concordam.
 
 ## A extensão: Contagem de Inversões
 

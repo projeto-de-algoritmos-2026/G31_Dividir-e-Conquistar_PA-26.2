@@ -68,7 +68,7 @@ def par_mais_proximo(pontos: list[tuple[float, float]],
 
 
 def _main(argv: list[str]) -> int:
-    from src.dados import carregar, coordenadas
+    from src.dados import carregar, carregar_municipios, coordenadas, local
 
     minimo = float(argv[1]) if len(argv) > 1 else 0.0
     try:
@@ -82,12 +82,13 @@ def _main(argv: list[str]) -> int:
         print("nenhum par acima desse mínimo")
         return 0
 
+    municipios = carregar_municipios()
     a, b = estabelecimentos[par[0]], estabelecimentos[par[1]]
     print(f"{len(estabelecimentos):,} estabelecimentos · mínimo de {minimo:g} km"
           .replace(",", "."))
     print(f"menor distância: {d * 1000:.2f} metros\n")
-    print(f"  {a.nome} · UF {a.uf} · IBGE {a.ibge}")
-    print(f"  {b.nome} · UF {b.uf} · IBGE {b.ibge}")
+    print(f"  {a.nome} · {local(a, municipios)}")
+    print(f"  {b.nome} · {local(b, municipios)}")
     return 0
 
 

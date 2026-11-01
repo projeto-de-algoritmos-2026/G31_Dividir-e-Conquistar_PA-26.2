@@ -26,7 +26,11 @@ mais próximo — e a força bruta levaria mais de mil milhões de comparações
 
 ## Os dados
 
-O arquivo bruto não é versionado. Baixe o CSV do CNES e salve como
+Os arquivos brutos não são versionados.
+
+### Estabelecimentos de saúde — CNES, Ministério da Saúde
+
+Baixe o CSV do CNES e salve como
 `data/raw/Unidades_Basicas_Saude-UBS.csv`:
 
 <https://dadosabertos.saude.gov.br/dataset/unidades-basicas-de-saude-ubs>
@@ -47,7 +51,7 @@ usa vírgula, no arquivo nacional inteiro. Sem trocar a vírgula por ponto, todo
 
 **A base só traz códigos.** `UF` e `IBGE` são códigos numéricos, não nomes.
 
-Os **27 códigos de unidade da federação** estão em `src/dados.py`, e não vieram
+Os **27 códigos de unidade da federação** estão em `src/ufs.py`, e não vieram
 de memória: conferimos cada um contra as coordenadas da própria base. Roraima e
 Amapá são os dois únicos com latitude média positiva, o Acre é o mais a oeste, o
 Rio Grande do Sul o mais ao sul, e o Distrito Federal tem exatamente 200
@@ -57,6 +61,23 @@ Os **nomes de município** não cabem no código: são 5.570. Se o arquivo
 `data/municipios_ibge.csv` existir, com as colunas `codigo;nome` separadas por
 ponto e vírgula, os nomes aparecem nas saídas; sem ele, sai o código. A tabela
 está em <https://servicodados.ibge.gov.br/api/v1/localidades/municipios>.
+
+### Setores censitários — Censo 2022, IBGE
+
+Só a **extensão das inversões** precisa deste arquivo; o algoritmo principal não.
+
+<https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Agregados_por_Setores_Censitarios/malha_com_atributos/setores/shp/UF/DF/DF_setores_CD2022.zip>
+
+**Descompacte**, deixando os cinco arquivos (`.shp`, `.dbf`, `.shx`, `.prj`,
+`.cpg`) soltos em `data/raw/`. São 2,5 MB: é o arquivo do DF, não o nacional, e
+o `.dbf` já traz a população junto da geometria.
+
+Conferência — `python -m src.setores` deve imprimir 5.418 setores, 2.817.381
+habitantes, 5.021 urbanos e 397 rurais, em 33 regiões administrativas.
+
+O shapefile está em SIRGAS 2000 geográfico, ou seja já em latitude e longitude.
+Lemos com `pyshp` e reduzimos cada setor ao centro do seu polígono, pela fórmula
+do shoelace em `src/geometria.py`.
 
 ## A geometria
 
@@ -168,11 +189,25 @@ pip install -r requirements.txt
 
 ## Uso
 
+A interface, com o mapa e os controles:
+
 ```bash
-python -m src.dados                 # confere o carregamento da base
+streamlit run app.py
+```
+
+Os módulos também rodam sozinhos pela linha de comando:
+
+```bash
+python -m src.dados                 # confere o carregamento da base do CNES
+python -m src.setores               # confere os setores censitários do DF
 python -m src.par_proximo           # o par mais próximo, sem limiar
 python -m src.par_proximo 0.001     # o par mais próximo acima de 1 metro
+python -m src.inversoes             # a extensão: população contra acesso
+python -m src.validacao             # a curva de tempo e o relatório
 ```
+
+O `src.validacao` grava a curva de tempo, os gráficos e a tabela em
+`resultados/`.
 
 ## Testes
 
@@ -180,8 +215,14 @@ python -m src.par_proximo 0.001     # o par mais próximo acima de 1 metro
 python -m unittest discover
 ```
 
-Os que dependem do arquivo bruto são pulados quando ele não está em `data/raw/`,
-então a suíte roda num clone recém-feito, sem download.
+São 126 testes. Os que dependem dos arquivos brutos são pulados quando eles não
+estão em `data/raw/`, então a suíte roda num clone recém-feito, sem download.
+
+Um deles, `tests/test_modulos.py`, existe por causa de um susto: em 29/10 o
+repositório ficou com três arquivos importando dois módulos que não existiam, e
+**a suíte passava assim**, porque nenhum teste importava aqueles módulos. Agora
+há um teste que importa todo módulo de `src/` e confere todo `from src...` do
+projeto contra os módulos que existem de fato.
 
 ## Apresentação
 

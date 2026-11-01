@@ -177,6 +177,55 @@ afirmar que os dois concordam.
 
 *(seção da Eduarda)*
 
+## Achados
+
+**O par mais próximo do Brasil está a distância zero — e isso é cadastro, não
+geografia.** São 486 coordenadas repetidas cobrindo 1.254 registros, com 33
+estabelecimentos empilhados num único ponto em Rio Branco.
+
+**E achar isso não precisa de algoritmo.** Uma tabela hash encontra as
+duplicatas em centésimos de segundo, mais rápido que o dividir e conquistar. É
+por isso que a pergunta do trabalho é outra: o par mais próximo **acima de um
+limiar**, que a tabela hash não sabe responder.
+
+**Não existe um vão separando duplicata de serviço distinto.** As respostas
+caem quase coladas no limiar — 1,02 m acima de 1 m, 10,03 m acima de 10 m,
+100,44 m acima de 100 m — e os dois estabelecimentos de cada par estão sempre no
+mesmo município. É um contínuo, e onde cortar é decisão documentada, não um fato
+dos dados.
+
+**O ganho do algoritmo é de três ordens de grandeza.** 214 segundos de força
+bruta contra 0,26 segundo, com a mesma resposta — verificada a cada `unittest`,
+não só uma vez.
+
+### Onde mora mais gente, a saúde está mais perto — um pouco
+
+Nos 5.418 setores censitários do DF, de 14.653.171 pares comparáveis,
+**6.503.928 são discordantes: 44,4%**. Rankings independentes dariam 50%. Em
+tau de Kendall isso é **+0,11**, com erro padrão de 0,0091 — **doze desvios
+padrão** de distância do acaso.
+
+A associação é fraca, e é real: setor mais populoso tende a ter unidade de saúde
+mais perto.
+
+### A unidade de análise mudou a conclusão
+
+Uma estimativa nossa anterior, feita sobre as **33 regiões administrativas** com
+distância média ponderada por população, deu metade exata — tau zero, rankings
+independentes. Ficou registrada no plano como suspeita a conferir, justamente
+por ser redonda demais.
+
+Não se sustentou. **Agregar 5.418 setores em 33 blocos lava o sinal:** dentro de
+uma região grande como Ceilândia a variação entre setores some na média. No
+nível do setor o sinal aparece.
+
+O número foi conferido por dois caminhos independentes — pelo `src/inversoes.py`
+e por contagem direta de pares numa amostra de 1.200 setores, sem usar o
+algoritmo — e os dois batem na quarta casa decimal.
+
+Essa é a lição que a gente leva do trabalho junto com o algoritmo: a escolha da
+unidade de análise mudou a resposta de "não há relação" para "há relação".
+
 ## Instalação
 
 Requer **Python 3.10 ou mais novo**. Os comandos rodam da raiz do repositório.

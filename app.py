@@ -23,9 +23,7 @@ st.set_page_config(
 LIMITE_FORCA_BRUTA = 3_000
 
 
-# ============================================================
-# UTILITÁRIOS
-# ============================================================
+
 
 def milhar(n: int) -> str:
     return f"{n:,}".replace(",", ".")
@@ -49,10 +47,6 @@ def zoom(distancia_km: float) -> float:
         )
     )
 
-
-# ============================================================
-# CARREGAMENTO DOS DADOS
-# ============================================================
 
 @st.cache_data(show_spinner="Carregando a base do CNES...")
 def carregar_base():
@@ -89,9 +83,7 @@ def achar_par(minimo_m: float, uf: str, municipio: str):
     return distancia_km, par, segundos
 
 
-# ============================================================
-# MAPAS
-# ============================================================
+
 
 def mostrar_mapa(a, b, distancia_km: float):
     pontos = pd.DataFrame([
@@ -195,9 +187,6 @@ def mostrar_mapa_regiao(estabelecimentos):
     )
 
 
-# ============================================================
-# INFORMAÇÕES DOS ESTABELECIMENTOS
-# ============================================================
 
 def mostrar_estabelecimento(titulo: str, estabelecimento):
     st.markdown(f"**{titulo}**")
@@ -212,9 +201,6 @@ def mostrar_estabelecimento(titulo: str, estabelecimento):
     )
 
 
-# ============================================================
-# RESULTADO DO PAR MAIS PRÓXIMO
-# ============================================================
 
 def mostrar_resultado(estabelecimentos, minimo_m, uf, municipio):
     distancia_km, par, segundos = achar_par(
@@ -274,9 +260,7 @@ def mostrar_resultado(estabelecimentos, minimo_m, uf, municipio):
     mostrar_mapa(a, b, distancia_km)
 
 
-# ============================================================
-# EXPLORAÇÃO GEOGRÁFICA
-# ============================================================
+
 
 def mostrar_exploracao(estabelecimentos):
     st.subheader("Distribuição dos serviços de saúde")
@@ -289,9 +273,6 @@ def mostrar_exploracao(estabelecimentos):
     mostrar_mapa_regiao(estabelecimentos)
 
 
-# ============================================================
-# EXPLICAÇÃO DO ALGORITMO
-# ============================================================
 
 def mostrar_como_funciona():
     st.subheader("Como funciona o dividir e conquistar?")
@@ -408,9 +389,7 @@ PAR_MAIS_PROXIMO(pontos):
     )
 
 
-# ============================================================
-# COMPARAÇÃO DOS ALGORITMOS
-# ============================================================
+
 
 def mostrar_comparacao_com_forca_bruta(estabelecimentos, minimo_m):
     st.subheader("Laboratório de desempenho")
@@ -523,9 +502,7 @@ def mostrar_comparacao_com_forca_bruta(estabelecimentos, minimo_m):
         )
 
 
-# ============================================================
-# ANÁLISE DE DESEMPENHO
-# ============================================================
+
 
 def mostrar_analise(estabelecimentos, minimo_m):
     st.subheader("Análise de desempenho")
@@ -593,9 +570,7 @@ def mostrar_analise(estabelecimentos, minimo_m):
         )
 
 
-# ============================================================
-# APLICAÇÃO PRINCIPAL
-# ============================================================
+
 
 def main():
 
@@ -626,9 +601,6 @@ def main():
 
         return
 
-    # --------------------------------------------------------
-    # SIDEBAR
-    # --------------------------------------------------------
 
     with st.sidebar:
 
@@ -698,9 +670,6 @@ def main():
 
         st.caption("Projeto de Algoritmos · CNES")
 
-    # --------------------------------------------------------
-    # INDICADORES GERAIS
-    # --------------------------------------------------------
 
     col1, col2, col3 = st.columns(3)
 
@@ -721,9 +690,7 @@ def main():
 
     st.divider()
 
-    # --------------------------------------------------------
-    # ABAS
-    # --------------------------------------------------------
+
 
     aba_explorar, aba_algoritmo, aba_desempenho = st.tabs([
         "📍 Explorar regiões",

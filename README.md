@@ -171,11 +171,114 @@ afirmar que os dois concordam.
 
 ## A extensão: Contagem de Inversões
 
-*(seção da Eduarda)*
+Item **3.2** da ementa. É o mesmo esqueleto de dividir e conquistar com um
+passo de combinação diferente: em vez de varrer uma faixa em volta da linha de
+corte, conta os pares fora de ordem enquanto intercala as duas metades já
+ordenadas. Quando um elemento da direita entra na frente de `k` elementos que
+ainda restam na esquerda, ele está invertido com os `k` de uma vez — é essa
+contagem em bloco que troca o O(n²) da contagem ingênua por **O(n log n)**.
+
+**A pergunta:** onde mora mais gente, a saúde está mais perto?
+
+Ordenamos os 5.418 setores censitários do DF por população e por distância até
+a unidade de saúde mais próxima, e contamos as inversões entre os dois
+rankings. Uma inversão aqui é um par **discordante**: o setor mais populoso é
+também o mais distante. Se os dois rankings não tivessem relação nenhuma,
+metade dos pares seria discordante.
+
+São 14.674.653 pares. Percorrer todos é exatamente o que o merge evita. O
+resultado está na seção **Achados**, logo abaixo.
+
+### Onde isso está
+
+`src/inversoes.py`:
+
+```
+contar_inversoes(valores) -> int
+comparar_rankings(populacoes, distancias) -> Concordancia
+distancia_ate_a_mais_proxima(pontos, unidades) -> list[float]
+```
+
+Empates de população ficam fora da conta: dois setores com a mesma população
+não concordam nem discordam. Por isso `Concordancia` separa `pares`,
+`empatados` e `comparaveis`, e a fração discordante é calculada sobre os
+comparáveis. São 21.482 empates — jogá-los para um dos lados mudaria o
+resultado na terceira casa.
+
+```bash
+python -m src.inversoes
+```
+
+`tests/test_inversoes.py`, 18 testes. A contagem é conferida contra uma
+contagem na marra, escrita à parte dentro do próprio arquivo de teste, em 20
+listas sorteadas.
 
 ## A força bruta e a validação
 
-*(seção da Eduarda)*
+`src/forca_bruta.py` compara todos os pares, O(n²), e existe para ser a régua.
+Ela tem **exatamente a mesma assinatura** do dividir e conquistar:
+
+```
+par_mais_proximo(pontos, minimo_km=0.0) -> (distancia_km, (i, j))
+```
+
+É isso que permite trocar uma pela outra dentro de um teste e exigir a mesma
+resposta. `tests/test_forca_bruta.py` cruza as duas em **35 instâncias** — com
+e sem limiar, incluindo conjuntos carregados de duplicatas — e ainda confere a
+própria força bruta contra uma terceira contagem, independente, escrita dentro
+do arquivo de teste.
+
+### A curva de tempo
+
+`src/validacao.py` roda os dois algoritmos sobre prefixos de uma mesma ordem
+embaralhada e grava tudo em `resultados/`:
+
+```bash
+python -m src.validacao
+```
+
+| pontos | dividir e conquistar | força bruta | ganho |
+| --- | --- | --- | --- |
+| 1.000 | 0,004 s | 0,048 s | 11× |
+| 6.007 | 0,022 s | 1,777 s | **80×** |
+| 11.013 | 0,044 s | — | — |
+| 21.026 | 0,088 s | — | — |
+| 31.039 | 0,141 s | — | — |
+| 46.059 | **0,280 s** | — | — |
+
+A força bruta para em 10.000 pontos por padrão, porque daí em diante ela domina
+o tempo do experimento inteiro: nos 46.059 pontos ela leva **214 segundos**.
+
+Os tempos acima são de uma execução só, e mudam de máquina para máquina. O que
+não muda é a relação entre as duas curvas, e é ela que o gráfico mostra.
+
+![Tempo para achar o par mais próximo, escala log](resultados/curva_tempo_log.svg)
+
+Com os dois eixos em escala log, a inclinação da reta **é** o expoente.
+Medindo entre o primeiro e o último ponto de cada curva:
+
+| | inclinação medida | teoria |
+| --- | --- | --- |
+| força bruta | **2,02** | 2 |
+| dividir e conquistar | **1,08** | 1, mais o fator log |
+
+Não é uma figura ilustrativa: são as duas complexidades aparecendo na medição.
+
+### A tabela hash, para manter a honestidade
+
+O mesmo comando mede o que uma tabela hash faz com a pergunta ingênua:
+
+| | tempo |
+| --- | --- |
+| tabela hash, achar coordenadas repetidas | **0,008 s** |
+| dividir e conquistar, sem limiar | 0,220 s |
+
+Trinta vezes mais rápido, e dá a mesma resposta — **zero metros** — porque sem
+limiar a pergunta é só "existe duplicata?". É por isso que o trabalho pergunta
+outra coisa. A tabela com as respostas acima de 1 m, 10 m e 100 m sai no mesmo
+relatório, em `resultados/validacao.md`.
+
+`tests/test_validacao.py`, 24 testes.
 
 ## Achados
 
@@ -275,7 +378,7 @@ projeto contra os módulos que existem de fato.
 
 ## Apresentação
 
-`<link do vídeo>`
+[![Par de Pontos mais Próximos na base do CNES](https://img.youtube.com/vi/5Z1TFtjznRI/maxresdefault.jpg)](https://www.youtube.com/watch?v=5Z1TFtjznRI)
 
 ## Trabalho anterior do grupo
 

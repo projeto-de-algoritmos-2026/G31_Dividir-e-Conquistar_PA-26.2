@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 460" width="760" height="460" font-family="Helvetica, Arial, sans-serif">
+<rect width="760" height="460" fill="#ffffff"/>
+<text x="380.0" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#141917">Tempo para achar o par mais próximo</text>
+<line x1="78" y1="396.0" x2="736" y2="396.0" stroke="#e3e0d6"/>
+<text x="70" y="400.0" text-anchor="end" font-size="11" fill="#5f6b65">0.001</text>
+<line x1="78" y1="310.0" x2="736" y2="310.0" stroke="#e3e0d6"/>
+<text x="70" y="314.0" text-anchor="end" font-size="11" fill="#5f6b65">0.01</text>
+<line x1="78" y1="224.0" x2="736" y2="224.0" stroke="#e3e0d6"/>
+<text x="70" y="228.0" text-anchor="end" font-size="11" fill="#5f6b65">0.1</text>
+<line x1="78" y1="138.0" x2="736" y2="138.0" stroke="#e3e0d6"/>
+<text x="70" y="142.0" text-anchor="end" font-size="11" fill="#5f6b65">1</text>
+<line x1="78" y1="52.0" x2="736" y2="52.0" stroke="#e3e0d6"/>
+<text x="70" y="56.0" text-anchor="end" font-size="11" fill="#5f6b65">10</text>
+<line x1="78.0" y1="52" x2="78.0" y2="396" stroke="#eef0ea"/>
+<text x="78.0" y="414" text-anchor="middle" font-size="11" fill="#5f6b65">1000</text>
+<line x1="407.0" y1="52" x2="407.0" y2="396" stroke="#eef0ea"/>
+<text x="407.0" y="414" text-anchor="middle" font-size="11" fill="#5f6b65">10000</text>
+<line x1="736.0" y1="52" x2="736.0" y2="396" stroke="#eef0ea"/>
+<text x="736.0" y="414" text-anchor="middle" font-size="11" fill="#5f6b65">100000</text>
+<line x1="78" y1="396" x2="736" y2="396" stroke="#141917"/>
+<line x1="78" y1="52" x2="78" y2="396" stroke="#141917"/>
+<text x="407.0" y="446" text-anchor="middle" font-size="12" fill="#141917">pontos (n) — escala log</text>
+<text x="18" y="224.0" text-anchor="middle" font-size="12" fill="#141917" transform="rotate(-90 18 224.0)">segundos — escala log</text>
+<polyline points="78.0,241.4 334.2,106.9" fill="none" stroke="#c1543f" stroke-width="2.5"/>
+<circle cx="78.0" cy="241.4" r="3.5" fill="#c1543f"/>
+<circle cx="334.2" cy="106.9" r="3.5" fill="#c1543f"/>
+<polyline points="78.0,315.2 334.2,271.9 420.8,242.8 474.3,229.3 513.2,218.1 543.7,208.1 568.8,202.8 590.2,195.8 608.8,189.8 625.2,183.3" fill="none" stroke="#1E6E5A" stroke-width="2.5"/>
+<circle cx="78.0" cy="315.2" r="3.5" fill="#1E6E5A"/>
+<circle cx="334.2" cy="271.9" r="3.5" fill="#1E6E5A"/>
+<circle cx="420.8" cy="242.8" r="3.5" fill="#1E6E5A"/>
+<circle cx="474.3" cy="229.3" r="3.5" fill="#1E6E5A"/>
+<circle cx="513.2" cy="218.1" r="3.5" fill="#1E6E5A"/>
+<circle cx="543.7" cy="208.1" r="3.5" fill="#1E6E5A"/>
+<circle cx="568.8" cy="202.8" r="3.5" fill="#1E6E5A"/>
+<circle cx="590.2" cy="195.8" r="3.5" fill="#1E6E5A"/>
+<circle cx="608.8" cy="189.8" r="3.5" fill="#1E6E5A"/>
+<circle cx="625.2" cy="183.3" r="3.5" fill="#1E6E5A"/>
+<rect x="92" y="56" width="250" height="50" fill="#ffffff" stroke="#e3e0d6"/>
+<line x1="102" y1="70" x2="126" y2="70" stroke="#c1543f" stroke-width="2.5"/>
+<text x="134" y="74" font-size="12" fill="#141917">força bruta, O(n²)</text>
+<line x1="102" y1="92" x2="126" y2="92" stroke="#1E6E5A" stroke-width="2.5"/>
+<text x="134" y="96" font-size="12" fill="#141917">dividir e conquistar, O(n log n)</text>
+</svg>

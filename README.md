@@ -24,6 +24,10 @@ A pergunta que exige o algoritmo é outra: **qual o par mais próximo acima de u
 limiar**. Aí não basta saber se dois pontos são iguais, é preciso saber qual é o
 mais próximo — e a força bruta levaria mais de mil milhões de comparações.
 
+## Apresentação
+
+[![Par de Pontos mais Próximos na base do CNES](https://img.youtube.com/vi/5Z1TFtjznRI/maxresdefault.jpg)](https://www.youtube.com/watch?v=5Z1TFtjznRI)
+
 ## Os dados
 
 Os arquivos brutos não são versionados.
@@ -375,10 +379,6 @@ repositório ficou com três arquivos importando dois módulos que não existiam
 **a suíte passava assim**, porque nenhum teste importava aqueles módulos. Agora
 há um teste que importa todo módulo de `src/` e confere todo `from src...` do
 projeto contra os módulos que existem de fato.
-
-## Apresentação
-
-[![Par de Pontos mais Próximos na base do CNES](https://img.youtube.com/vi/5Z1TFtjznRI/maxresdefault.jpg)](https://www.youtube.com/watch?v=5Z1TFtjznRI)
 
 ## Trabalho anterior do grupo
 
